@@ -1,0 +1,6 @@
+{
+  "root": true,
+  "extends": [
+    "@sdp.nd/react"
+  ]
+}
