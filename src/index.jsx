@@ -33,18 +33,18 @@ const defaultSetting = {
   onMarkerClick: function (marker) {},
   onMarkerReached: function (marker, index) {},
   markers: []
-};
+}
 
 // create a non-colliding random number
 function generateUUID () {
-  var d = new Date().getTime()
-  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+  let d = new Date().getTime()
+  const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     var r = (d + Math.random() * 16) % 16 | 0
     d = Math.floor(d / 16)
     return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16)
   })
   return uuid
-};
+}
 
 /**
  * Returns the size of an element and its position
@@ -92,7 +92,7 @@ function registerVideoJsMarkersPlugin (options) {
           return
         }
         Object.keys(source).forEach(key => {
-          let value = source[key]
+          const value = source[key]
           if (!isPlain(value)) {
             result[key] = value
             return
@@ -123,11 +123,11 @@ function registerVideoJsMarkersPlugin (options) {
   /**
    * register the markers plugin (dependent on jquery)
    */
-  let setting = videojs.mergeOptions(defaultSetting, options)
-  let markersMap = {}
-  let markersList = [] // list of markers sorted by time
+  const setting = videojs.mergeOptions(defaultSetting, options)
+  const markersMap = {}
+  const markersList = [] // list of markers sorted by time
   let currentMarkerIndex = NULL_INDEX
-  let player = this
+  const player = this
   let markerTip = null
   let breakOverlay = null
   let overlayIndex = NULL_INDEX
@@ -183,8 +183,7 @@ function registerVideoJsMarkersPlugin (options) {
   }
 
   function createMarkerDiv (marker) {
-
-    var markerDiv = videojs.dom.createEl('div', {}, {
+    const markerDiv = videojs.dom.createEl('div', {}, {
       'data-marker-key': marker.key,
       'data-marker-time': setting.markerTip.time(marker)
     })
@@ -193,14 +192,14 @@ function registerVideoJsMarkersPlugin (options) {
 
     // bind click event to seek to marker time
     markerDiv.addEventListener('click', function (e) {
-      var preventDefault = false
+      let preventDefault = false
       if (typeof setting.onMarkerClick === 'function') {
         // if return false, prevent default behavior
         preventDefault = setting.onMarkerClick(marker) === false
       }
 
       if (!preventDefault) {
-        var key = this.getAttribute('data-marker-key')
+        const key = this.getAttribute('data-marker-key')
         player.currentTime(setting.markerTip.time(markersMap[key]))
       }
     })
@@ -215,8 +214,8 @@ function registerVideoJsMarkersPlugin (options) {
   function updateMarkers (force) {
     // update UI for markers whose time changed
     markersList.forEach((marker) => {
-      var markerDiv = player.el().querySelector(".vjs-marker[data-marker-key='" + marker.key + "']")
-      var markerTime = setting.markerTip.time(marker)
+      const markerDiv = player.el().querySelector(".vjs-marker[data-marker-key='" + marker.key + "']")
+      const markerTime = setting.markerTip.time(marker)
 
       if (force || markerDiv.getAttribute('data-marker-time') !== markerTime) {
         setMarkderDivStyle(marker, markerDiv)
@@ -228,7 +227,7 @@ function registerVideoJsMarkersPlugin (options) {
 
   function removeMarkers (indexArray) {
     // reset overlay
-    if (!!breakOverlay){
+    if (!!breakOverlay) {
       overlayIndex = NULL_INDEX
       breakOverlay.style.visibility = 'hidden'
     }
@@ -346,7 +345,8 @@ function registerVideoJsMarkersPlugin (options) {
     /*
       check marker reached in between markers
       the logic here is that it triggers a new marker reached event only if the player
-      enters a new marker range (e.g. from marker 1 to marker 2). Thus, if player is on marker 1 and user clicked on marker 1 again, no new reached event is triggered)
+      enters a new marker range (e.g. from marker 1 to marker 2).
+      Thus, if player is on marker 1 and user clicked on marker 1 again, no new reached event is triggered)
     */
     if (!markersList.length) {
       return
@@ -386,7 +386,7 @@ function registerVideoJsMarkersPlugin (options) {
       newMarkerIndex = NULL_INDEX
     } else {
       // look for new index
-      for (var i = 0; i < markersList.length; i++) {
+      for (let i = 0; i < markersList.length; i++) {
         nextMarkerTime = getNextMarkerTime(i)
         if (
           currentTime >= setting.markerTip.time(markersList[i]) &&
@@ -439,8 +439,8 @@ function registerVideoJsMarkersPlugin (options) {
     next: function () {
       // go to the next marker from current timestamp
       const currentTime = player.currentTime()
-      for (var i = 0; i < markersList.length; i++) {
-        var markerTime = setting.markerTip.time(markersList[i])
+      for (let i = 0; i < markersList.length; i++) {
+        const markerTime = setting.markerTip.time(markersList[i])
         if (markerTime > currentTime) {
           player.currentTime(markerTime)
           break
@@ -450,8 +450,8 @@ function registerVideoJsMarkersPlugin (options) {
     prev: function () {
       // go to previous marker
       const currentTime = player.currentTime()
-      for (var i = markersList.length - 1; i >= 0; i--) {
-        var markerTime = setting.markerTip.time(markersList[i])
+      for (let i = markersList.length - 1; i >= 0; i--) {
+        const markerTime = setting.markerTip.time(markersList[i])
         // add a threshold
         if (markerTime + 0.5 < currentTime) {
           player.currentTime(markerTime)
@@ -468,8 +468,8 @@ function registerVideoJsMarkersPlugin (options) {
       removeMarkers(indexArray)
     },
     removeAll: function () {
-      var indexArray = []
-      for (var i = 0; i < markersList.length; i++) {
+      const indexArray = []
+      for (let i = 0; i < markersList.length; i++) {
         indexArray.push(i)
       }
       removeMarkers(indexArray)
