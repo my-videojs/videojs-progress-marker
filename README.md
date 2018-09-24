@@ -1,12 +1,12 @@
-# 视频播放器组件
+# 进度条标记
 
 ---
 
-视频播放器
+videojs播放器进度条标记插件（videojs6）
 
 ## 何时使用
 
-- 播放视频的时候
+- 需要给videojs播放器的进度条打上标记的时候
 
 ## 浏览器支持
 
@@ -15,7 +15,7 @@ IE 9+
 ## 安装
 
 ```bash
-npm install rc-video --save
+npm install videojs-progress-marker --save
 ```
 
 ## 运行
@@ -34,84 +34,54 @@ npm run site
 
 ### 基本
 
-基本用法。
+在进度条添加标记
 
 ```jsx
-import RcVideo from 'rc-video'
-import "rc-video/lib/style/"
-
+import videojs from 'video.js'
+import 'video.js/dist/video-js.css'
+import "videojs-progress-marker/lib"
+import "videojs-progress-marker/lib/style/"
 
 class App extends React.Component {
-  render() {
-    const videoJsOptions = {
-      logo: 'http://os71std62.bkt.clouddn.com/logo.gif',
-      className: 'vjs-big-play-centered',
-      controls: true,
-      inactivityTimeout: 0,
-      poster: 'http://os71std62.bkt.clouddn.com/poster.jpg',
-      sources: [
-        {
-          src: 'http://www.w3school.com.cn/i/movie.ogg',
-          type: 'video/ogg'
-        },{
-          src: 'http://www.runoob.com/try/demo_source/movie.mp4',
-          type: 'video/mp4'
-        },{
-          src: 'http://www.appstate.edu/~meltonml/mighty_mouse.f4v',
-          type: 'video/flv'
-        }
-      ],
-      onReady: (player) => {
-        // 监听全屏事件
-        player.on('fullscreenchange', () => {
-           console.log('全屏')
-        })
-        // 监听跳转播放事件
-        player.on('seeked', () => {
-           console.log('跳转')
-        })
-      }
+  componentDidMount () {
+    const node = ReactDOM.findDOMNode(this.videoWrap)
+    if (!node) {
+      return
     }
-    return (
-       <RcVideo { ...videoJsOptions } />
-    )
-  }
-}
-
-ReactDOM.render(<App />, mountNode);
-```
-
-### 字幕
-
-为视频添加字幕。
-
-```jsx
-import RcVideo from 'rc-video'
-import "rc-video/lib/style/"
-
-class App extends React.Component {
-  render() {
     const videoJsOptions = {
       controls: true,
-      fluid: true,
-      playbackRates: [0.5, 1, 1.5, 2],
       sources: [{
-        src: 'http://www.runoob.com/try/demo_source/movie.mp4',
+        src: 'http://os71std62.bkt.clouddn.com/ocean.mp4',
         type: 'video/mp4'
       }],
-      onReady: (player) => {
-        const track = {
-          kind: 'captions',
-          src: 'http://os71std62.bkt.clouddn.com/test.vtt',
-          srclang: 'en',
-          label: 'english',
-          default: 'default'
-        }
-        player.addRemoteTextTrack(track);
-      }
     }
+    // react0.14.x data-reactid问题
+    const videoEl = document.createElement('video')
+    videoEl.className = `video-js`
+
+    node.appendChild(videoEl)
+    this.player = videojs(videoEl, {...videoJsOptions}, () => {
+      this.addMarker()
+    })
+  }
+  componentWillUnmount () {
+    if (this.player) {
+      this.player.dispose()
+    }
+  }
+  addMarker () {
+    this.player.markers({
+      markers: [
+          {time: 9.5, text: "this"},
+          {time: 16,  text: "is"},
+          {time: 23.6,text: "so"},
+          {time: 28,  text: "cool"}
+      ]
+    })
+  }
+  render() {
     return (
-       <RcVideo { ...videoJsOptions } />
+       <div data-vjs-player ref={node => { this.videoWrap = node }} />
     )
   }
 }
@@ -119,31 +89,199 @@ class App extends React.Component {
 ReactDOM.render(<App />, mountNode);
 ```
 
-### flash
+### 自定义标记
 
-使用flash播放。
+自定义标记，tootip和overlay的样式和文字
 
 ```jsx
-import RcVideo from 'rc-video'
-import "rc-video/lib/style/"
+import videojs from 'video.js'
+import 'video.js/dist/video-js.css'
+import "videojs-progress-marker/lib"
+import "videojs-progress-marker/lib/style/"
 
 class App extends React.Component {
-  render() {
+  componentDidMount () {
+    const node = ReactDOM.findDOMNode(this.videoWrap)
+    if (!node) {
+      return
+    }
     const videoJsOptions = {
       controls: true,
-      width: 500,
-      height: 400,
       sources: [{
-        src: 'http://www.appstate.edu/~meltonml/mighty_mouse.f4v',
-        type: 'video/flv'
+        src: 'http://os71std62.bkt.clouddn.com/ocean.mp4',
+        type: 'video/mp4'
       }],
-      techOrder: ['flash'],
-      onReady: (player) => {
-        console.log('i am ready')
-      }
     }
+    // react0.14.x data-reactid问题
+    const videoEl = document.createElement('video')
+    videoEl.className = `video-js`
+
+    node.appendChild(videoEl)
+    this.player = videojs(videoEl, {...videoJsOptions}, () => {
+      this.addMarker()
+    })
+  }
+  componentWillUnmount () {
+    if (this.player) {
+      this.player.dispose()
+    }
+  }
+  addMarker () {
+    this.player.markers({
+      markerStyle: {
+      'width':'9px',
+      'border-radius': '40%',
+      'background-color': 'orange'
+      },
+      markerTip:{
+          display: true,
+          text: function(marker) {
+            return "I am a marker tip: "+ marker.text;
+          }
+      },
+      breakOverlay:{
+          display: true,
+          displayTime: 4,
+          style:{
+            'width':'100%',
+            'height': '30%',
+            'background-color': 'rgba(10,10,10,0.6)',
+            'color': 'white',
+            'font-size': '16px'
+          },
+          text: function(marker) {
+            return "This is a break overlay: " + marker.overlayText;
+          },
+      },
+      markers: [
+          {time: 9.5, text: "this", overlayText: "1", class: "special-blue"},
+          {time: 16,  text: "is", overlayText: "2"},
+          {time: 23.6,text: "so", overlayText: "3"},
+          {time: 28,  text: "cool", overlayText: "4"}
+      ]
+    })
+  }
+  render() {
     return (
-       <RcVideo { ...videoJsOptions } />
+       <div data-vjs-player ref={node => { this.videoWrap = node }} />
+    )
+  }
+}
+
+ReactDOM.render(<App />, mountNode);
+```
+
+### 动态添加，删除标记
+
+动态添加，删除标记，跳转到标记点
+
+```css
+.btn-group button{
+  border: 1px  solid #ccc;
+  background: #fff;
+  padding: 0 10px;
+  margin: 10px;
+}
+```
+
+```jsx
+import videojs from 'video.js'
+import 'video.js/dist/video-js.css'
+import "videojs-progress-marker/lib"
+import "videojs-progress-marker/lib/style/"
+
+class App extends React.Component {
+  componentDidMount () {
+    const node = ReactDOM.findDOMNode(this.videoWrap)
+    if (!node) {
+      return
+    }
+    const videoJsOptions = {
+      controls: true,
+      sources: [{
+        src: 'http://os71std62.bkt.clouddn.com/ocean.mp4',
+        type: 'video/mp4'
+      }],
+    }
+    // react0.14.x data-reactid问题
+    const videoEl = document.createElement('video')
+    videoEl.className = `video-js`
+
+    node.appendChild(videoEl)
+    this.player = videojs(videoEl, {...videoJsOptions}, () => {
+      this.addMarker()
+    })
+  }
+  componentWillUnmount () {
+    if (this.player) {
+      this.player.dispose()
+    }
+  }
+  addMarker () {
+    this.player.markers({
+      breakOverlay:{
+        display: true
+      },
+      onMarkerClick: function(marker){
+        console.log(`Marker click:${marker.time}`)
+      },
+      onMarkerReached: function(marker){
+        console.log(`Marker reached:${marker.time}`)
+      },
+      markers: [
+          {time: 9.5, text: "this", overlayText: "1"},
+          {time: 16,  text: "is", overlayText: "2"},
+          {time: 23.6,text: "so", overlayText: "3"},
+          {time: 28,  text: "cool", overlayText: "4"}
+      ]
+    })
+  }
+  handlePrev = () => {
+    this.player.markers.prev()
+  }
+  handleNext = () => {
+    this.player.markers.next()
+  }
+  handleAdd = () => {
+    const randomTime = Math.floor((Math.random() * parseInt(this.player.duration())) + 1);
+
+    // come up with a random time
+    this.player.markers.add([{
+      time: randomTime,
+      text: "I'm new",
+      overlayText: "I'm new"
+    }]);
+  }
+  handleMoveForward = () => {
+    const markers = this.player.markers.getMarkers();
+    for(var i = 0; i < markers.length; i++) {
+      markers[i].time += 1;
+    }
+    this.player.markers.updateTime();
+  }
+  handleRemoveFirst = () => {
+    this.player.markers.remove([0]);
+  }
+  handleRemoveAll = () => {
+    this.player.markers.removeAll();
+  }
+  handleDestroy = () => {
+    this.player.markers.destroy();
+  }
+  render() {
+    return (
+      <div> 
+        <div data-vjs-player ref={node => { this.videoWrap = node }} />
+        <div className="btn-group">
+          <button onClick={this.handlePrev}>上一个</button>
+          <button onClick={this.handleNext}>下一个</button>
+          <button onClick={this.handleAdd}>添加</button>  
+          <button onClick={this.handleMoveForward}>向前移动一秒</button>  
+          <button onClick={this.handleRemoveFirst}>移除第一个</button>  
+          <button onClick={this.handleRemoveAll}>移除所有</button>  
+          <button onClick={this.handleDestroy}>销毁</button>  
+        </div> 
+      </div>
     )
   }
 }
@@ -153,27 +291,5 @@ ReactDOM.render(<App />, mountNode);
 
 ## API
 
-更多参数可以参考: https://docs.videojs.com/tutorial-options.html
-
-| 参数        | 说明                                                | 类型        | 默认值 |
-|----------- |---------------------------------------------------  | ----------  |-------|
-| logo       | 控制栏右下角logo图标                                  | string      | 无    |
-| className  | 为video标签设置class；video.js提供了默认的如`vjs-big-play-centered`表示播放按钮居中，`vjs-fluid`表示自适应容器大小 | string | 无 |
-| inactivityTimeout | 闲置超时，单位为毫秒；值为0表示没有              | number     | 3000  |
-| controls | 是否显示控制条；当没有控制条的时候，需要使用autoplay属性或者通过player API来控制播放 | false  |   |
-| width | 设置视频播放器的宽度(以像素为单位);当使用如`50%`的时候，会被自动转换为`50px` | string\|number  | 640  |
-| height | 设置视频播放器的高度(以像素为单位);当使用如`50%`的时候，会被自动转换为`50px` | string\|number  | 480  |
-| fluid | 设置为true时将会自适应容器大小，设置className为`vjs-fluid`有相同效果 | boolean  | false  |
-| playbackRates | 播放速度，由大于0的数字组成的数组, 当有值时，控制栏会出现一个播放速度控制按钮 | array<number>  | 3000  |
-| poster | 视频开始前的封面图片 | string  | 无  |
-| sources | 对应video标签下的一系列souce标签的数组对象，对象内需要有src和type属性 | array<{src: string, type: string}>  | 无  |
-| techOrder | 定义优先用那种方式播放视频，默认使用html5，组件里内置了flash播放；比如使用`['html5', 'flash']`表示优先使用html5，无法播放时使用flash;你也可以根据需要注册其他技术 | array<string> | ['html5'] |
-| onReady | 视频初始化完成后的回调， 一些异步的操作可以在这里完成，参数为实例化后的player | function(player) | 无 |
-
-## 一些问题
-一些功能videojs没有集成，采用插件的方式实现, 是否在fish的demo里面集成  
-清晰度切换 https://github.com/kmoskwiak/videojs-resolution-switcher  
-广告 https://github.com/videojs/videojs-contrib-ads  
-进度条标记（这个没有发布npm包，且点击跳转的时候回调参数不符合需求，是否fork一个自己修改） https://github.com/spchuang/videojs-markers  
-国际化： react中使用报错[全局变量问题?](https://github.com/videojs/video.js/issues/5092)，在fish中使用fish的国际化  
-非ie9下使用table布局 字幕按钮和播放速度按钮向左靠齐，ie9下向右靠齐
+代码是fork了[videojs-markers](https://github.com/spchuang/videojs-markers)稍加修改后得来的（videojs-marker没有发布npm包），
+API与之相比没有变化，可以查看[这里](http://www.sampingchuang.com/videojs-markers)。

@@ -14,11 +14,9 @@
     "start": "md-tools start",
     "site": "md-tools build",
     "build": "npm run clean && npm run babel && shx cp -rf src/style/*.less lib/style",
-    "clean": "shx rm -rf lib site && shx echo clean Done"
+    "clean": "shx rm -rf lib site && shx echo clean Done",
+    "pub": "npm run build && npm publish"
   },
-  "pre-commit": [
-    "lint"
-  ],
   "author": "mraiguo <mraiguo@gmail.com>",
   "files": [
     "lib"

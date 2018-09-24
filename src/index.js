@@ -1,4 +1,4 @@
-import videojs from 'video.js';
+import videojs from 'video.js'
 
 // default setting
 const defaultSetting = {
@@ -38,12 +38,11 @@ const defaultSetting = {
 // create a non-colliding random number
 function generateUUID () {
   let d = new Date().getTime()
-  const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    var r = (d + Math.random() * 16) % 16 | 0
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (d + Math.random() * 16) % 16 | 0
     d = Math.floor(d / 16)
     return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16)
   })
-  return uuid
 }
 
 /**
@@ -54,7 +53,7 @@ function generateUUID () {
  * @return {DOMRect|Object}   size and position of an element
  */
 function getElementBounding (element) {
-  var elementBounding
+  let elementBounding
   const defaultBoundingRect = {
     top: 0,
     bottom: 0,
@@ -109,7 +108,7 @@ function registerVideoJsMarkersPlugin (options) {
   }
 
   if (!videojs.dom.createEl) {
-    videojs.dom.createEl = function(tagName, props, attrs) {
+    videojs.dom.createEl = function (tagName, props, attrs) {
       const el = videojs.Player.prototype.dom.createEl(tagName, props)
       if (!!attrs) {
         Object.keys(attrs).forEach(key => {
@@ -364,7 +363,7 @@ function registerVideoJsMarkersPlugin (options) {
 
     if (currentMarkerIndex !== NULL_INDEX) {
       // check if staying at same marker
-      var nextMarkerTime = getNextMarkerTime(currentMarkerIndex)
+      const nextMarkerTime = getNextMarkerTime(currentMarkerIndex)
       if (
         currentTime >= setting.markerTip.time(markersList[currentMarkerIndex]) &&
         currentTime < nextMarkerTime
@@ -387,7 +386,7 @@ function registerVideoJsMarkersPlugin (options) {
     } else {
       // look for new index
       for (let i = 0; i < markersList.length; i++) {
-        nextMarkerTime = getNextMarkerTime(i)
+        const nextMarkerTime = getNextMarkerTime(i)
         if (
           currentTime >= setting.markerTip.time(markersList[i]) &&
           currentTime < nextMarkerTime
@@ -459,7 +458,7 @@ function registerVideoJsMarkersPlugin (options) {
         }
       }
     },
-    addx: function (newMarkers) {
+    add: function (newMarkers) {
       // add new markers given an array of index
       addMarkers(newMarkers)
     },
