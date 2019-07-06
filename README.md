@@ -15,7 +15,7 @@ IE 9+
 ## 安装
 
 ```bash
-npm install videojs-progress-marker --save
+npm install @my-videojs/videojs-progress-marker --save
 ```
 
 ## 运行
