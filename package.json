@@ -1,7 +1,7 @@
 {
   "name": "@my-videojs/videojs-progress-marker",
   "port": "8000",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "videojs的进度标记插件",
   "license": "MIT",
   "main": "lib/index.js",
@@ -15,7 +15,7 @@
     "site": "md-tools build",
     "build": "npm run clean && npm run babel && shx cp -rf src/style/*.less lib/style",
     "clean": "shx rm -rf lib site && shx echo clean Done",
-    "pub": "npm run build && npm publish"
+    "pub": "npm run build && npm publish --access publish"
   },
   "author": "mraiguo <mraiguo@gmail.com>",
   "files": [
