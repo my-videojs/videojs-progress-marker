@@ -34,7 +34,32 @@ const defaultSetting = {
   onMarkerReached: function (marker, index) {},
   markers: []
 }
-
+function isPlain (value) {
+  return !!value && typeof value === 'object' &&
+    toString.call(value) === '[object Object]' &&
+    value.constructor === Object
+}
+function mergeOptions (source1, source2) {
+  const result = {}
+  const sources = [source1, source2]
+  sources.forEach(source => {
+    if (!source) {
+      return
+    }
+    Object.keys(source).forEach(key => {
+      const value = source[key]
+      if (!isPlain(value)) {
+        result[key] = value
+        return
+      }
+      if (!isPlain(result[key])) {
+        result[key] = {}
+      }
+      result[key] = mergeOptions(result[key], value)
+    })
+  })
+  return result
+}
 // create a non-colliding random number
 function generateUUID () {
   let d = new Date().getTime()
@@ -78,32 +103,7 @@ function registerVideoJsMarkersPlugin (options) {
   // copied from video.js/src/js/utils/merge-options.js since
   // videojs 4 doens't support it by defualt.
   if (!videojs.mergeOptions) {
-    function isPlain (value) {
-      return !!value && typeof value === 'object' &&
-        toString.call(value) === '[object Object]' &&
-        value.constructor === Object
-    }
-    function mergeOptions (source1, source2) {
-      const result = {}
-      const sources = [source1, source2]
-      sources.forEach(source => {
-        if (!source) {
-          return
-        }
-        Object.keys(source).forEach(key => {
-          const value = source[key]
-          if (!isPlain(value)) {
-            result[key] = value
-            return
-          }
-          if (!isPlain(result[key])) {
-            result[key] = {}
-          }
-          result[key] = mergeOptions(result[key], value)
-        })
-      })
-      return result
-    }
+
     videojs.mergeOptions = mergeOptions
   }
 
