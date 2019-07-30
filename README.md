@@ -51,7 +51,7 @@ class App extends React.Component {
     const videoJsOptions = {
       controls: true,
       sources: [{
-        src: 'http://os71std62.bkt.clouddn.com/ocean.mp4',
+        src: '//www.w3school.com.cn/example/html5/mov_bbb.mp4',
         type: 'video/mp4'
       }],
     }
@@ -72,10 +72,10 @@ class App extends React.Component {
   addMarker () {
     this.player.markers({
       markers: [
-          {time: 9.5, text: "this"},
-          {time: 16,  text: "is"},
-          {time: 23.6,text: "so"},
-          {time: 28,  text: "cool"}
+          {time: 3, text: "this"},
+          {time: 4,  text: "is"},
+          {time: 7,text: "so"},
+          {time: 8,  text: "cool"}
       ]
     })
   }
@@ -108,7 +108,7 @@ class App extends React.Component {
     const videoJsOptions = {
       controls: true,
       sources: [{
-        src: 'http://os71std62.bkt.clouddn.com/ocean.mp4',
+        src: '//www.w3school.com.cn/example/html5/mov_bbb.mp4',
         type: 'video/mp4'
       }],
     }
@@ -154,10 +154,10 @@ class App extends React.Component {
           },
       },
       markers: [
-          {time: 9.5, text: "this", overlayText: "1", class: "special-blue"},
-          {time: 16,  text: "is", overlayText: "2"},
-          {time: 23.6,text: "so", overlayText: "3"},
-          {time: 28,  text: "cool", overlayText: "4"}
+          {time: 3, text: "this", overlayText: "1", class: "special-blue"},
+          {time: 4,  text: "is", overlayText: "2"},
+          {time: 7,text: "so", overlayText: "3"},
+          {time: 8,  text: "cool", overlayText: "4"}
       ]
     })
   }
@@ -199,7 +199,7 @@ class App extends React.Component {
     const videoJsOptions = {
       controls: true,
       sources: [{
-        src: 'http://os71std62.bkt.clouddn.com/ocean.mp4',
+        src: '//www.w3school.com.cn/example/html5/mov_bbb.mp4',
         type: 'video/mp4'
       }],
     }
@@ -225,14 +225,16 @@ class App extends React.Component {
       onMarkerClick: function(marker){
         console.log(`Marker click:${marker.time}`)
       },
-      onMarkerReached: function(marker){
+      onMarkerReached: (marker) => {
+        this.player.pause()
+        console.log(this.player.currentTime())
         console.log(`Marker reached:${marker.time}`)
       },
       markers: [
-          {time: 9.5, text: "this", overlayText: "1"},
-          {time: 16,  text: "is", overlayText: "2"},
-          {time: 23.6,text: "so", overlayText: "3"},
-          {time: 28,  text: "cool", overlayText: "4"}
+          {time: 3, text: "this", overlayText: "1"},
+          {time: 4,  text: "is", overlayText: "2"},
+          {time: 7,text: "so", overlayText: "3"},
+          {time: 8,  text: "cool", overlayText: "4"}
       ]
     })
   }

@@ -178,8 +178,9 @@ function registerVideoJsMarkersPlugin (options) {
       markerDiv.style.width = (marker.duration / player.duration()) * 100 + '%'
       markerDiv.style.marginLeft = '0px'
     } else {
-      const markerDivBounding = getElementBounding(markerDiv)
-      markerDiv.style.marginLeft = markerDivBounding.width / 2 + 'px'
+      // todo: 设置marginLeft的时候markerDiv还没有插入dom，获取到的参数都是0
+      // const markerDivBounding = getElementBounding(markerDiv)
+      // markerDiv.style.marginLeft = markerDivBounding.width / 2 + 'px'
     }
   }
 
