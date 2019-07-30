@@ -1,7 +1,7 @@
 {
   "name": "@my-videojs/videojs-progress-marker",
   "port": "8000",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "videojs的进度标记插件",
   "license": "MIT",
   "main": "lib/index.js",
