@@ -1,5 +1,7 @@
 import videojs from 'video.js'
 
+
+const UPDATE_REFRESH_INTERVAL = 30;
 // default setting
 const defaultSetting = {
   markerStyle: {
@@ -420,8 +422,23 @@ function registerVideoJsMarkersPlugin (options) {
     if (setting.breakOverlay.display) {
       initializeOverlay()
     }
-    onTimeUpdate()
-    player.on('timeupdate', onTimeUpdate)
+    // 不使用timeupdate做更新，频率太低导致和进度条位置对不上
+    // 使用videojs的逻辑https://github.com/videojs/video.js/blob/70a71ae81e/src/js/control-bar/progress-control/seek-bar.js#L64
+    // player.on('timeupdate', onTimeUpdate)
+
+    let updateInterval = null;
+    player.on('playing', () => {
+      player.clearInterval(updateInterval)
+
+      updateInterval = player.setInterval(() => {
+        player.requestAnimationFrame(() => {
+          onTimeUpdate()
+        })
+      }, UPDATE_REFRESH_INTERVAL)
+    });
+    player.on(['ended', 'pause', 'waiting'], () => {
+      player.clearInterval(updateInterval)
+    })
     player.off('loadedmetadata')
   }
 
