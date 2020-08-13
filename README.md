@@ -39,8 +39,8 @@ npm run site
 ```jsx
 import videojs from 'video.js'
 import 'video.js/dist/video-js.css'
-import "videojs-progress-marker/lib"
-import "videojs-progress-marker/lib/style/"
+import "@my-videojs/videojs-progress-marker/lib"
+import "@my-videojs/videojs-progress-marker/lib/style/"
 
 class App extends React.Component {
   componentDidMount () {
@@ -48,6 +48,7 @@ class App extends React.Component {
     if (!node) {
       return
     }
+
     const videoJsOptions = {
       controls: true,
       sources: [{
@@ -62,6 +63,7 @@ class App extends React.Component {
     node.appendChild(videoEl)
     this.player = videojs(videoEl, {...videoJsOptions}, () => {
       this.addMarker()
+
     })
   }
   componentWillUnmount () {
@@ -72,10 +74,10 @@ class App extends React.Component {
   addMarker () {
     this.player.markers({
       markers: [
-          {time: 3, text: "this"},
-          {time: 4,  text: "is"},
-          {time: 7,text: "so"},
-          {time: 8,  text: "cool"}
+          {time: 2, text: "<div id='test'>点击事件</div>"},
+          {time: 3, text: "is"},
+          {time: 7, text: "so"},
+          {time: 8, text: "cool"}
       ]
     })
   }
@@ -96,8 +98,8 @@ ReactDOM.render(<App />, mountNode);
 ```jsx
 import videojs from 'video.js'
 import 'video.js/dist/video-js.css'
-import "videojs-progress-marker/lib"
-import "videojs-progress-marker/lib/style/"
+import "@my-videojs/videojs-progress-marker/lib"
+import "@my-videojs/videojs-progress-marker/lib/style/"
 
 class App extends React.Component {
   componentDidMount () {
@@ -187,8 +189,8 @@ ReactDOM.render(<App />, mountNode);
 ```jsx
 import videojs from 'video.js'
 import 'video.js/dist/video-js.css'
-import "videojs-progress-marker/lib"
-import "videojs-progress-marker/lib/style/"
+import "@my-videojs/videojs-progress-marker/lib"
+import "@my-videojs/videojs-progress-marker/lib/style/"
 
 class App extends React.Component {
   componentDidMount () {
@@ -272,17 +274,17 @@ class App extends React.Component {
   }
   render() {
     return (
-      <div> 
+      <div>
         <div data-vjs-player ref={node => { this.videoWrap = node }} />
         <div className="btn-group">
           <button onClick={this.handlePrev}>上一个</button>
           <button onClick={this.handleNext}>下一个</button>
-          <button onClick={this.handleAdd}>添加</button>  
-          <button onClick={this.handleMoveForward}>向前移动一秒</button>  
-          <button onClick={this.handleRemoveFirst}>移除第一个</button>  
-          <button onClick={this.handleRemoveAll}>移除所有</button>  
-          <button onClick={this.handleDestroy}>销毁</button>  
-        </div> 
+          <button onClick={this.handleAdd}>添加</button>
+          <button onClick={this.handleMoveForward}>向前移动一秒</button>
+          <button onClick={this.handleRemoveFirst}>移除第一个</button>
+          <button onClick={this.handleRemoveAll}>移除所有</button>
+          <button onClick={this.handleDestroy}>销毁</button>
+        </div>
       </div>
     )
   }

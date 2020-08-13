@@ -105,7 +105,6 @@ function registerVideoJsMarkersPlugin (options) {
   // copied from video.js/src/js/utils/merge-options.js since
   // videojs 4 doens't support it by defualt.
   if (!videojs.mergeOptions) {
-
     videojs.mergeOptions = mergeOptions
   }
 
@@ -162,8 +161,10 @@ function registerVideoJsMarkersPlugin (options) {
   function setMarkderDivStyle (marker, markerDiv) {
     markerDiv.className = `vjs-marker ${marker.class || ''}`
 
+    const markerPoint = markerDiv.firstChild
+
     Object.keys(setting.markerStyle).forEach(key => {
-      markerDiv.style[key] = setting.markerStyle[key]
+      markerPoint.style[key] = setting.markerStyle[key]
     })
 
     // hide out-of-bound markers
@@ -190,6 +191,9 @@ function registerVideoJsMarkersPlugin (options) {
       'data-marker-time': setting.markerTip.time(marker)
     })
 
+    const markerPoint = videojs.dom.createEl('div', {className: 'vjs-marker-point'})
+    markerDiv.appendChild(markerPoint)
+
     setMarkderDivStyle(marker, markerDiv)
 
     // bind click event to seek to marker time
@@ -207,6 +211,11 @@ function registerVideoJsMarkersPlugin (options) {
     })
 
     if (setting.markerTip.display) {
+      const markerTip = videojs.dom.createEl('div', {
+        className: 'vjs-tip',
+        innerHTML: "<div class='vjs-tip-inner'></div><div class='vjs-tip-arrow'><div class='arrow'></div></div>"
+      },{'data-marker-tip-key': marker.key})
+      markerDiv.appendChild(markerTip)
       registerMarkerTipHandler(markerDiv)
     }
 
@@ -261,34 +270,20 @@ function registerVideoJsMarkersPlugin (options) {
 
   // attach hover event handler
   function registerMarkerTipHandler (markerDiv) {
+    const markerTip = markerDiv.lastChild
     markerDiv.addEventListener('mouseover', () => {
       const marker = markersMap[markerDiv.getAttribute('data-marker-key')]
       if (!!markerTip) {
-        markerTip.querySelector('.vjs-tip-inner').innerText = setting.markerTip.text(marker)
-        // margin-left needs to minus the padding length to align correctly with the marker
-        markerTip.style.left = getPosition(marker) + '%'
-        const markerTipBounding = getElementBounding(markerTip)
-        const markerDivBounding = getElementBounding(markerDiv)
-        markerTip.style.marginLeft =
-          -parseFloat(markerTipBounding.width / 2) + parseFloat(markerDivBounding.width / 4) + 'px'
+        markerTip.querySelector('.vjs-tip-inner').innerHTML = setting.markerTip.text(marker)
         markerTip.style.visibility = 'visible'
       }
     })
 
     markerDiv.addEventListener('mouseout', () => {
-      if (!!markerTip) {
-        markerTip.style.visibility = 'hidden'
-      }
+      markerTip.style.visibility = 'hidden'
     })
   }
 
-  function initializeMarkerTip () {
-    markerTip = videojs.dom.createEl('div', {
-      className: 'vjs-tip',
-      innerHTML: "<div class='vjs-tip-arrow'></div><div class='vjs-tip-inner'></div>"
-    })
-    player.el().querySelector('.vjs-progress-holder').appendChild(markerTip)
-  }
 
   // show or hide break overlays
   function updateBreakOverlay () {
@@ -412,10 +407,6 @@ function registerVideoJsMarkersPlugin (options) {
 
   // setup the whole thing
   function initialize () {
-    if (setting.markerTip.display) {
-      initializeMarkerTip()
-    }
-
     // remove existing markers if already initialized
     player.markers.removeAll()
     addMarkers(setting.markers)
