@@ -161,7 +161,7 @@ function registerVideoJsMarkersPlugin (options) {
   function setMarkderDivStyle (marker, markerDiv) {
     markerDiv.className = `vjs-marker ${marker.class || ''}`
 
-    const markerPoint = markerDiv.firstChild
+    const markerPoint = markerDiv.querySelector('.vjs-marker-point')
 
     Object.keys(setting.markerStyle).forEach(key => {
       markerPoint.style[key] = setting.markerStyle[key]
@@ -213,15 +213,16 @@ function registerVideoJsMarkersPlugin (options) {
     if (setting.markerTip.display) {
       const markerTip = videojs.dom.createEl('div', {
         className: 'vjs-tip',
-        innerHTML: `<div class='vjs-tip-inner'>${setting.markerTip.text(marker)}</div><div class='vjs-tip-arrow'><div class='arrow'></div></div>`
-      },{'data-marker-tip-key': marker.key})
-      markerDiv.appendChild(markerTip)
+        innerHTML: `<div class='vjs-tip-inner'>${setting.markerTip.text(marker)}</div>
+                    <div class='vjs-tip-arrow'><div class='arrow'></div></div>`
+      })
       markerTip.addEventListener('mousedown', function(e) {
         e.stopPropagation()
       })
       markerTip.addEventListener('click', function(e) {
         e.stopPropagation()
       })
+      markerDiv.appendChild(markerTip)
       registerMarkerTipHandler(markerDiv)
     }
 
@@ -276,18 +277,20 @@ function registerVideoJsMarkersPlugin (options) {
 
   // attach hover event handler
   function registerMarkerTipHandler (markerDiv) {
-    const markerTip = markerDiv.lastChild
+    const markerTip = markerDiv.querySelector('.vjs-tip')
 
     markerDiv.addEventListener('mouseover', () => {
-      // const marker = markersMap[markerDiv.getAttribute('data-marker-key')]
       if (!!markerTip) {
-        // markerTip.querySelector('.vjs-tip-inner').innerHTML = setting.markerTip.text(marker)
+        const markerDivBounding = getElementBounding(markerDiv)
+        markerTip.style.marginLeft = (markerDivBounding.width / 2) + 'px'
         markerTip.style.visibility = 'visible'
       }
     })
 
     markerDiv.addEventListener('mouseout', () => {
-      markerTip.style.visibility = 'hidden'
+      if (!!markerTip) {
+        markerTip.style.visibility = 'hidden'
+      }
     })
   }
 
