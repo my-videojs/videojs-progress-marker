@@ -287,7 +287,7 @@ function registerVideoJsMarkersPlugin (options) {
     })
 
     markerDiv.addEventListener('mouseout', () => {
-      // markerTip.style.visibility = 'hidden'
+      markerTip.style.visibility = 'hidden'
     })
   }
 
