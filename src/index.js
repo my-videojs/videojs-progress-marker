@@ -213,9 +213,15 @@ function registerVideoJsMarkersPlugin (options) {
     if (setting.markerTip.display) {
       const markerTip = videojs.dom.createEl('div', {
         className: 'vjs-tip',
-        innerHTML: "<div class='vjs-tip-inner'></div><div class='vjs-tip-arrow'><div class='arrow'></div></div>"
+        innerHTML: `<div class='vjs-tip-inner'>${setting.markerTip.text(marker)}</div><div class='vjs-tip-arrow'><div class='arrow'></div></div>`
       },{'data-marker-tip-key': marker.key})
       markerDiv.appendChild(markerTip)
+      markerTip.addEventListener('mousedown', function(e) {
+        e.stopPropagation()
+      })
+      markerTip.addEventListener('click', function(e) {
+        e.stopPropagation()
+      })
       registerMarkerTipHandler(markerDiv)
     }
 
@@ -271,16 +277,17 @@ function registerVideoJsMarkersPlugin (options) {
   // attach hover event handler
   function registerMarkerTipHandler (markerDiv) {
     const markerTip = markerDiv.lastChild
+
     markerDiv.addEventListener('mouseover', () => {
-      const marker = markersMap[markerDiv.getAttribute('data-marker-key')]
+      // const marker = markersMap[markerDiv.getAttribute('data-marker-key')]
       if (!!markerTip) {
-        markerTip.querySelector('.vjs-tip-inner').innerHTML = setting.markerTip.text(marker)
+        // markerTip.querySelector('.vjs-tip-inner').innerHTML = setting.markerTip.text(marker)
         markerTip.style.visibility = 'visible'
       }
     })
 
     markerDiv.addEventListener('mouseout', () => {
-      markerTip.style.visibility = 'hidden'
+      // markerTip.style.visibility = 'hidden'
     })
   }
 

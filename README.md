@@ -74,7 +74,7 @@ class App extends React.Component {
   addMarker () {
     this.player.markers({
       markers: [
-          {time: 2, text: "<div id='test'>点击事件</div>"},
+          {time: 2, text: "<a href='http://www.baidu.com'>asd</a>"},
           {time: 3, text: "is"},
           {time: 7, text: "so"},
           {time: 8, text: "cool"}
