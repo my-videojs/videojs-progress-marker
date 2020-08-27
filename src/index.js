@@ -210,6 +210,15 @@ function registerVideoJsMarkersPlugin (options) {
       }
     })
 
+    // bind mouseover event to seek to marker time
+    markerDiv.addEventListener('mouseover', function (e) {
+      var preventDefault = false;
+      if (typeof setting.onMarkerMouseOver === 'function') {
+        // if return false, prevent default behavior
+        preventDefault = setting.onMarkerMouseOver(marker) === false;
+      }
+    });
+    
     if (setting.markerTip.display) {
       const markerTip = videojs.dom.createEl('div', {
         className: 'vjs-tip',
