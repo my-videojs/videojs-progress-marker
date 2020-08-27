@@ -232,6 +232,9 @@ class App extends React.Component {
         console.log(this.player.currentTime())
         console.log(`Marker reached:${marker.time}`)
       },
+      onMarkerMouseOver: (marker) => {
+        console.log(`Marker mouseover:${marker.time}`)
+      },
       markers: [
           {time: 3, text: "this", overlayText: "1"},
           {time: 4,  text: "is", overlayText: "2"},
