@@ -49,7 +49,7 @@
     "react-dom": "0.14.9",
     "react-router": "3.2.1",
     "shx": "^0.2.2",
-    "stylelint": "^8.4.0",
+    "stylelint": "^15.10.1",
     "stylelint-config-standard": "^18.0.0",
     "video.js": "~6.2.5",
     "videojs-flash": "^2.1.1"
